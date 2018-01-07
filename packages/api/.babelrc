@@ -1,0 +1,10 @@
+{
+  "presets": [
+    "latest",
+    ["env", {
+      "targets": {
+        "node": true
+      }
+    }]
+  ]
+}

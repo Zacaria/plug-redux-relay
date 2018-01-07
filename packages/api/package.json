@@ -3,10 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node src/index.js",
-    "lint": "eslint --fix -f codeframe --ext js src"
+    "lint": "eslint --fix -f codeframe --ext js src",
+    "start": "pm2 start pm2.json",
+    "stop": "pm2 stops all --watch",
+    "serve": "nodemon src/index.js --exec babel-node"
   },
   "dependencies": {
-    "koa": "^2.4.1"
+    "babel-cli": "^6.26.0",
+    "babel-preset-latest": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "config": "^1.29.1",
+    "graphql": "^0.12.3",
+    "graphql-relay": "^0.5.4",
+    "koa": "^2.4.1",
+    "koa-graphql": "^0.7.3",
+    "koa-router": "^7.3.0",
+    "nodemon": "^1.14.8",
+    "pm2": "^2.9.1"
   }
 }
