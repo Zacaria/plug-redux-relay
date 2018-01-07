@@ -1,0 +1,12 @@
+{
+  "name": "api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.js",
+    "lint": "eslint --fix -f codeframe --ext js src"
+  },
+  "dependencies": {
+    "koa": "^2.4.1"
+  }
+}
