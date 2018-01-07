@@ -1,0 +1,13 @@
+.counter-container {
+    padding: 20px;
+    border: 2px darkcyan solid;
+    border-radius: 2px;
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: baseline;*/
+}
+
+.counter-container .column {
+    display: flex;
+    justify-content: center;
+}

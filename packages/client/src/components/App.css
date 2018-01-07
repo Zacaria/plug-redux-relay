@@ -11,6 +11,9 @@
   background-color: #222;
   height: 150px;
   padding: 20px;
+}
+
+.App-header .App-title {
   color: white;
 }
 
@@ -20,6 +23,8 @@
 
 .App-intro {
   font-size: large;
+  display: flex;
+  justify-content: center;
 }
 
 @keyframes App-logo-spin {
