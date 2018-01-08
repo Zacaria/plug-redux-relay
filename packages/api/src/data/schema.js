@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLSchema } from 'graphql';
+import { GraphQLInt, GraphQLObjectType, GraphQLSchema, GraphQLString, GraphQLList } from 'graphql';
 
 import {
   fromGlobalId,
@@ -7,42 +7,74 @@ import {
   nodeDefinitions,
 } from 'graphql-relay';
 
+import { getCounter, getCounters } from './data';
+
+
+/**
+ * We get the node interface and field from the relay library.
+ *
+ * The first method is the way we resolve an ID to its object. The second is the
+ * way we resolve an object that implements node to its type.
+ */
 const { nodeInterface, nodeField } = nodeDefinitions(
   globalId => {
+    console.log('globale', globalId)
     const { type, id } = fromGlobalId(globalId);
-    return {
-      id: 2,
-      value: 10,
-    };
+    console.log('TOTO', type, id);
+    return getCounter(id);
   },
   obj => {
+    console.log('plop', obj)
     return GraphQLCount;
   }
 );
 
 const GraphQLCount = new GraphQLObjectType({
   name: 'Count',
-  fields: {
-    id: globalIdField('Count'),
+  fields: () => ({
+    id: globalIdField(),
+    myId: {
+      type: GraphQLString,
+    },
     value: {
       type: GraphQLInt,
-      resolve: () => 12,
+      resolve: (c, a, t) => {
+        console.log('PPPPPPP', c, a);
+        return c.value;
+      }
     },
-  },
+    all: {
+      type: new GraphQLList(GraphQLCount),
+      resolve: () => getCounters(),
+    },
+  }),
   interfaces: [nodeInterface],
 });
 
 const Root = new GraphQLObjectType({
   name: 'Root',
-  fields: {
-    viewer: {
+  fields: () => ({
+    myCount: {
       type: GraphQLCount,
-      resolve: () => ({
-        count: 0,
-      }),
+      args: {
+        id: {
+          type: GraphQLString,
+        },
+      },
+      //resolve: (obj, args) => getCounter(args.id),
+      resolve: () => getCounters(),
     },
-    counter: nodeField,
-  },
+    counters: {
+      type: new GraphQLList(GraphQLCount),
+      args: {
+        id: {
+          type: GraphQLString,
+        },
+      },
+      resolve: () => getCounters(),
+    },
+    node: nodeField,
+  }),
 });
 
 const GraphQLIncrementMutation = new mutationWithClientMutationId({
