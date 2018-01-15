@@ -7,6 +7,6 @@ const counter = id => ({
 
 const counters = Array.from({ length: DATA_LENGTH }).map((_, i) => counter(i));
 
-export const getCounter = id => counters.find(e => e.myId === id);
+export const getCounter = id => [counters.find(e => e.myId === id)];
 
 export const getCounters = () => counters;
