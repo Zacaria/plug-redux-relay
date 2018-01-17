@@ -3,6 +3,7 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
+  GraphQLNonNull,
   GraphQLList,
 } from 'graphql';
 
@@ -13,7 +14,12 @@ import {
   nodeDefinitions,
 } from 'graphql-relay';
 
-import { getCounter, getCounters } from './data';
+import {
+  getCounter,
+  getCounters,
+  incrementCounter,
+  decrementCounter,
+} from './data';
 
 /**
  * We get the node interface and field from the relay library.
@@ -74,26 +80,43 @@ const Root = new GraphQLObjectType({
 
 const GraphQLIncrementMutation = new mutationWithClientMutationId({
   name: 'Increment',
-  outputFields: {
-    count: {
-      type: GraphQLCount,
-      resolve: () => ({
-        value: 0,
-      }),
+  inputFields: {
+    myId: {
+      type: new GraphQLNonNull(GraphQLString),
     },
   },
-  mutateAndGetPayload: () => {
-    return {
-      value: 1,
-    };
+  outputFields: {
+    count: {
+      type: new GraphQLList(GraphQLCount),
+      resolve: mutated => getCounter(mutated[0].myId),
+    },
   },
+  mutateAndGetPayload: ({ myId }) =>
+    incrementCounter(myId).filter(c => c.myId === myId),
+});
+
+const GraphQLDecrementMutation = new mutationWithClientMutationId({
+  name: 'Decrement',
+  inputFields: {
+    myId: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+  },
+  outputFields: {
+    count: {
+      type: new GraphQLList(GraphQLCount),
+      resolve: mutated => getCounter(mutated[0].myId),
+    },
+  },
+  mutateAndGetPayload: ({ myId }) =>
+    decrementCounter(myId).filter(c => c.myId === myId),
 });
 
 const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
     increment: GraphQLIncrementMutation,
-    //decrement: GraphQLDecrementMutation,
+    decrement: GraphQLDecrementMutation,
   },
 });
 
