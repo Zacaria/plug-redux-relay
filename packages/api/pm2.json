@@ -1,7 +1,7 @@
 {
   "apps" : [{
     "name": "api",
-    "script"    : "dist/bin/www.js",
+    "script"    : "src/index.js",
     "instances" : "max",
     "exec_mode" : "cluster",
     "watch": ["package.json"]
